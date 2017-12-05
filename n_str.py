@@ -15,7 +15,7 @@ def find_n_str(list_txt, n):
             return dictory_txt[key]
     return None
 
-
+## 测试
 def converson_str(list_str):
     # 重组字符串为字典
     marked_str = []     # 筛选标记过的字符
