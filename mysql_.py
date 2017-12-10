@@ -8,13 +8,13 @@ cur = conn.cursor()
 
 
 # 查询操作
-sql = "select * from teacher"       # sql语句
-cur.execute(sql)                    # cur执行sql语句
-
-
-# 获取结果的第一行数据
-row_1 = cur.fetchone()
-print(row_1)
+# sql = "select * from teacher"       # sql语句
+# cur.execute(sql)                    # cur执行sql语句
+#
+#
+# # 获取结果的第一行数据
+# row_1 = cur.fetchone()
+# print(row_1)
 
 # 获取结果的前n行数据
 # row_2 = cur.fetchmany(2)
@@ -35,24 +35,33 @@ print(row_1)
 
 
 # 插入数据
-sql_insert = "insert into teacher values ( '5','lucy', '6')"
-cur.execute(sql_insert)
+# sql_insert = "insert into teacher values ( '5','lucy', '6')"
+# cur.execute(sql_insert)
+#
+# conn.commit()       # 提交数据，用于更新数据库
+#
+# # 修改数据
+# sql_change = "update teacher set NAME='kite' WHERE id=6"
+# cur.execute(sql_change)
+# conn.commit()
 
-conn.commit()       # 提交数据，用于更新数据库
+# # 删除数据
+# sql_delet = "delete from teacher WHERE NAME ='micro + str(i)' "
+# cur.execute(sql_delet)
 
-# 修改数据
-sql_change = "update teacher set NAME='kite' WHERE id=6"
-cur.execute(sql_change)
-conn.commit()
+i = 1
+while i <= 100:
+    l = []
+    name_val = "micro" + str(i)
+    course_id_val = i
+    l.append(name_val)
+    l.append(course_id_val)
+    sql = "insert into teacher (name, course_id) values (%s,%s)"
+    cur.execute(sql, l)
+    i += 1
 
-# 删除数据
-sql_delet = "delete from teacher WHERE id=7 "
-cur.execute(sql_delet)
 conn.commit()
 
 cur.close()     # 关闭游标对象
 conn.close()    # 关闭连接
-
-
-
 
