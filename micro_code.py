@@ -63,9 +63,71 @@ class Solution:
 
 
 ## test
-pre = [1,2,4,7,3,5,6,8]
-tin = [4,7,2,1,5,3,8,6]
-s = Solution()
-root = s.reConstructBinaryTree(pre, tin)
+# pre = [1,2,4,7,3,5,6,8]
+# tin = [4,7,2,1,5,3,8,6]
+# s = Solution()
+# root = s.reConstructBinaryTree(pre, tin)
 
-print(root)
+# print(root)
+
+
+
+class Node :
+    def __init__(self, data, left = None, right = None) :
+        self.data = data
+        self.left = left
+        self.right = right
+
+def printSpreadNode(root) :
+    list = []
+    list.append(root)
+    n = 1
+    while len(list) > 0 :
+        tempList = []
+        for i in list :
+            print("第" + str(n) + "层 : " + str(i.data))
+            if i.left is not None :
+                tempList.append(i.left)
+            if i.right is not None :
+                tempList.append(i.right)
+            list = tempList
+        n = n + 1
+
+# root = Node(1)
+# root.left = Node(2, Node(4), Node(5))
+# root.right = Node(3, Node(6), Node(7))
+
+# printSpreadNode(root)
+
+
+class Solution2:
+    def StrToInt(self, s):
+        if s is None or len(s) == 0:
+            return 0
+        number_str = '1234567890'
+        result = ''
+        index = 0
+        if s[0] == '+' :
+            index += 1
+            pass
+        if s[0] == '-' :
+            index += 1
+            result += '-'
+        if index == 1 and len(s) == 1 :
+            return 0
+        for e in range(0, len(s)) :
+            if e < index :
+                continue
+            if s[e] in number_str :
+                result += s[e]
+            else :
+                return 0
+        return int(result)
+
+s = Solution2()
+print(s.StrToInt('123'))
+        
+
+        
+        
+
