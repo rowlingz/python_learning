@@ -102,30 +102,62 @@ def printSpreadNode(root) :
 
 class Solution2:
     def StrToInt(self, s):
-        if s is None or len(s) == 0:
+        try :
+            return int(s)
+        except :
             return 0
-        number_str = '1234567890'
-        result = ''
-        index = 0
-        if s[0] == '+' :
-            index += 1
-            pass
-        if s[0] == '-' :
-            index += 1
-            result += '-'
-        if index == 1 and len(s) == 1 :
-            return 0
-        for e in range(0, len(s)) :
-            if e < index :
-                continue
-            if s[e] in number_str :
-                result += s[e]
-            else :
-                return 0
-        return int(result)
 
-s = Solution2()
-print(s.StrToInt('123'))
+# s = Solution2()
+# print(s.StrToInt('123'))
+
+
+class ListNode:
+    def __init__(self, x):
+        self.val = x
+        self.next = None
+
+
+class Solution:
+    def Merge(self, pHead1, pHead2):
+        # write code here
+        if (pHead1 == None) :
+            return pHead2
+        if (pHead2 == None) :
+            return pHead1
+        all_val_list = self.getAllList(pHead1, pHead2)
+        self.sort(all_val_list)
+        return self.constructList(all_val_list)
+
+    def constructList(list) :
+        head = ListNode(list[0])
+        p = head
+        for i in range(1, len(list)) :
+            p.next = ListNode(list[i])
+            p = p.next
+        return head
+
+    def sort(list) :
+        ## -- 冒泡排序 -- 
+        for i in range(0, len(list)) :
+            for j in range(len(list) - i, len(list)) :
+                if list[j] > list[j + 1] :
+                    ## 交换
+                    list[j], list[j + 1] = list[j + 1], list[j]
+        return list 
+
+    ## 获取所有的值  
+    def getAllList(pHead1, pHead2) :
+        list = []
+        p1 = pHead1
+        while (p1 != None) :
+            list.append(p1.val)
+            p1 = pHead1.next
+        p1 = pHead2 
+        while (p2 != None) :
+            list.append(p2.val)
+            p2 = pHead2.val
+        return list
+
         
 
         
