@@ -166,14 +166,37 @@ class Solution4 :
 pHead1 = ListNode(1, ListNode(3, ListNode(4)))
 pHead2 = ListNode(2, ListNode(5, ListNode(6)))
 
-s = Solution4()
-merged_head = s.Merge(pHead1, pHead2)
-t = merged_head
-while t != None :
-    print(t.val)
-    t = t.next
 
-    
+
+
+class Solution5 :
+    def merge(self, pHead1, pHead2) :
+        merge_list = []
+        while pHead1 is not None :
+            merge_list.append(pHead1.val)
+            pHead1 = pHead1.next
+        while pHead2 is not None :
+            merge_list.append(pHead2.val)
+            pHead2 = pHead2.next
+        
+        merge_list = sorted(merge_list)
+        root = ListNode(merge_list[0])
+        p = root
+        for i in range(1, len(merge_list)) :
+            p.next = ListNode(merge_list[i])
+            p = p.next
+        return root 
+
+# s = Solution5()
+# merged_head = s.merge(pHead1, pHead2)
+# t = merged_head
+# while t != None :
+#     print(t.val)
+#     t = t.next
+#   101
+# 111 << 1   11100
+print(7 << 1)
+            
 
 # class Solution3:
     ## 这种方法不是题目考察的本意
@@ -216,6 +239,3 @@ while t != None :
     #         list.append(p2.val)
     #         p2 = pHead2.val
     #     return list
-        
-        
-
