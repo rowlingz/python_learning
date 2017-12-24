@@ -64,11 +64,8 @@ encode_headers = urllib.parse.urlencode(headers_data)
 url = 'https://www.lagou.com/jobs/positionAjax.json?first=true&pn=1&kd=机器学习'
 params_data = {
     'first':'true',
-    'pn':'1',
-    'kd':'机器学习'
+    'kd':'算法'
 }
-
-params_data = urllib.parse.urlencode(params_data)
 
 post_data = {
     'city':'杭州',
@@ -78,23 +75,91 @@ post_data = {
 post_data = urllib.parse.urlencode(post_data).encode('utf-8')
 
 base_url = 'https://www.lagou.com/jobs/positionAjax.json?'
-target_url = base_url + params_data
 
-## 获取职位列表
-req = urllib.request.Request(url = target_url,data = post_data, method = 'POST', headers=headers_data)
-resp = urllib.request.urlopen(req)
-# print(resp.read().decode('utf-8'))
+page_index = 1
+position_list = []
+while True :
+    ## 每一页去爬，空就break
+    params_data['pn'] = str(page_index)
+    encode_params_data = urllib.parse.urlencode(params_data)
+    target_url = base_url + encode_params_data
+    ## 获取职位列表
+    req = urllib.request.Request(url = target_url,data = post_data, method = 'POST', headers=headers_data)
+    resp = urllib.request.urlopen(req)
+    # print(resp.read().decode('utf-8'))
 
-result = json.loads(resp.read().decode('utf-8'))
-position_list = result['content']['positionResult']['result']
+    result = json.loads(resp.read().decode('utf-8'))
+    position_resp_list = result['content']['positionResult']['result']
+    if len(position_resp_list) == 0 :
+        print('一共 : ' + str(page_index - 1) + "页")
+        break
+    for position in position_resp_list :
+        position_list.append(position)
+    page_index += 1
 
+print("职位数量:" + str(len(position_list)))
 for position in position_list :
-    print("职位名称 :" + position['positionName'])
+    print("职位名称 :" + position['positionName'] + ", 公司名称 : " + position['companyFullName'] + ",公司城市:" + position['city'] + '薪资:' + position['salary'])
 
+# "createTime":"2017-12-22 10:31:14",
+#                     "companyId":51649,
+#                     "positionId":3587720,
+#                     "positionName":"机器学习工程师",
+#                     "education":"硕士",
+#                     "city":"杭州",
+#                     "financeStage":"B轮",
+#                     "companyShortName":"掌众金服",
+#                     "companyLogo":"i/image/M00/0D/9E/CgpEMljl4JCAB4NsAAAT2z7aW8s078.jpg",
+#                     "salary":"22k-44k",
+#                     "industryField":"移动互联网,金融",
+#                     "district":"西湖区",
+#                     "positionAdvantage":"福利待遇好,双休,工作环境佳",
+#                     "companySize":"500-2000人",
+#                     "companyLabelList":[
+#                         "技能培训",
+#                         "节日礼物",
+#                         "绩效奖金",
+#                         "年度旅游"
+#                     ],
+#                     "publisherId":1859504,
+#                     "score":0,
+#                     "jobNature":"全职",
+#                     "workYear":"3-5年",
+#                     "approve":1,
+#                     "positionLables":[
+#                         "风控",
+#                         "大数据",
+#                         "深度学习"
+#                     ],
+#                     "industryLables":[
 
-# [{
-#     'positionName' : '',
-#     'city' : '',
-#     'description' : '',
-#     'company' : ''
-# }]
+#                     ],
+#                     "businessZones":null,
+#                     "formatCreateTime":"2天前发布",
+#                     "imState":"today",
+#                     "lastLogin":1514001372000,
+#                     "explain":null,
+#                     "plus":null,
+#                     "pcShow":0,
+#                     "appShow":0,
+#                     "deliver":0,
+#                     "gradeDescription":null,
+#                     "promotionScoreExplain":null,
+#                     "firstType":"金融类",
+#                     "secondType":"风控",
+#                     "isSchoolJob":0,
+#                     "subwayline":null,
+#                     "stationname":null,
+#                     "linestaion":null,
+#                     "latitude":"30.281044",
+#                     "longitude":"120.069178",
+#                     "companyFullName":"北京掌众科技有限公司",
+#                     "adWord":0
+
+[{
+    'positionName' : '',
+    'city' : '',
+    'description' : '',
+    'company' : '',
+    'salary' : ''
+}]
