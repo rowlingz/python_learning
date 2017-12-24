@@ -6,7 +6,7 @@
 # -*- coding:utf-8 -*-
 class TreeNode:
     def __init__(self, x):
-        self.val = xgit git
+        self.val = x
         self.left = None
         self.right = None
 
@@ -128,7 +128,7 @@ class Solution:
         self.sort(all_val_list)
         return self.constructList(all_val_list)
 
-    def constructList(list) :
+    def constructList(self, list) :
         head = ListNode(list[0])
         p = head
         for i in range(1, len(list)) :
@@ -136,7 +136,7 @@ class Solution:
             p = p.next
         return head
 
-    def sort(list) :
+    def sort(self, list) :
         ## -- 冒泡排序 -- 
         for i in range(0, len(list)) :
             for j in range(len(list) - i, len(list)) :
@@ -146,7 +146,7 @@ class Solution:
         return list 
 
     ## 获取所有的值  
-    def getAllList(pHead1, pHead2) :
+    def getAllList(self, pHead1, pHead2) :
         list = []
         p1 = pHead1
         while (p1 != None) :
@@ -160,6 +160,16 @@ class Solution:
 
         
 
+p1 = ListNode(1)
+p1.next = ListNode(3)
+p1.next.next = ListNode(5)
+
+p2 = ListNode(2)
+p2.next = ListNode(4)
+p2.next.next = ListNode(6)
+
+s = Solution()
+print(s.Merge(p1, p2))
         
         
 
