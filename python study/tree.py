@@ -65,9 +65,40 @@ class Tree(object):
             layer_node = temp_list
         return list
 
+    def preorder_nonrec(self, root):
+        # 非递归的先跟遍历
+        s = []
+        output = []
+        while root is not None or s != []:
+            while root is not None:
+                output.append(root.elem)
+                s.append(root.right)
+                root = root.left
+            root = s.pop()
+        return output
+
+    def postorder_nonrec(self, root):
+        # 非递归的后序遍历
+        s = []
+        output = []
+        while root is not None or s != []:
+            while root is not None:
+                s.append(root)
+                if root.left:
+                    root = root.left
+                else:
+                    root = root.right
+            root = s.pop()
+            output.append(root.elem)
+            if s != [] and s[-1].left == root:
+                root = s[-1].right
+            else:
+                root = None
+        return output
 
 
 
 s = Node(1, Node(2, Node(4), Node(6)), Node(3,Node(5),Node(7)))
 t = Tree()
 print(t.micro_layer(s))
+print(t.postorder_nonrec(s))
