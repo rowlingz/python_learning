@@ -1,5 +1,7 @@
+# -*- coding:utf-8 -*-
 import urllib.request
 import http.cookiejar
+import json
 
 # ---- python 2 -----
 # 获取cookie
@@ -78,6 +80,21 @@ post_data = urllib.parse.urlencode(post_data).encode('utf-8')
 base_url = 'https://www.lagou.com/jobs/positionAjax.json?'
 target_url = base_url + params_data
 
+## 获取职位列表
 req = urllib.request.Request(url = target_url,data = post_data, method = 'POST', headers=headers_data)
 resp = urllib.request.urlopen(req)
-print(resp.read().decode('utf-8'))
+# print(resp.read().decode('utf-8'))
+
+result = json.loads(resp.read().decode('utf-8'))
+position_list = result['content']['positionResult']['result']
+
+for position in position_list :
+    print("职位名称 :" + position['positionName'])
+
+
+# [{
+#     'positionName' : '',
+#     'city' : '',
+#     'description' : '',
+#     'company' : ''
+# }]
