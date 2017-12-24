@@ -55,7 +55,7 @@ def load_json_file(path) :
 
 headers_data = load_json_file(sys.path[0] + '/' + 'headers.json')
 encode_headers = urllib.parse.urlencode(headers_data)
-url = 'https://www.lagou.com/jobs/positionAjax.json?first=true&pn=1&kd=机器学习'
+url = 'https://www.lagou.com/jobs/positionAjax.json'
 params_data = {
     'first':'true',
     'kd':'算法'
@@ -102,3 +102,4 @@ for position in position_list :
     'company' : '',
     'salary' : ''
 }]
+
