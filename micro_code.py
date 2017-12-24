@@ -112,130 +112,64 @@ class Solution2:
 
 
 class ListNode:
-    def __init__(self, x, next = None):
+    def __init__(self, x):
         self.val = x
-        self.next = next
+        self.next = None
 
 
-    ## p |
-#   node 1 -->   node 3 --> node 5
+class Solution:
+    def Merge(self, pHead1, pHead2):
+        # write code here
+        if (pHead1 == None) :
+            return pHead2
+        if (pHead2 == None) :
+            return pHead1
+        all_val_list = self.getAllList(pHead1, pHead2)
+        self.sort(all_val_list)
+        return self.constructList(all_val_list)
 
-##  node 2 -->    node 4 --> node 6
-class Solution4 :
-    def Merge(self, pHead1, pHead2) :
-        ## 滑动指针
-        new_head = None
-        temp_head1 = pHead1
-        temp_head2 = pHead2
-        new_p = None
-        while temp_head1 != None and temp_head2 != None :
-            if temp_head1.val < temp_head2.val :
-                if new_head == None :
-                    # first
-                    new_head = temp_head1
-                    new_p = new_head
-                else :
-                    new_p.next = temp_head1
-                    new_p = new_p.next
-                temp_head1 = temp_head1.next
-            elif temp_head1.val > temp_head2.val :
-                if new_head == None :
-                    new_head = pHead2
-                else :
-                    new_p.next = temp_head2
-                    new_p = new_p.next
-                temp_head2 = temp_head2.next
-        if temp_head1 == None :
-            while temp_head2 != None :
-                if new_head == None :
-                    new_head = temp_head2
-                else :
-                    new_p.next = temp_head2
-                    new_p = new_p.next
-                temp_head2 = temp_head2.next
-        if temp_head2 == None :
-            while temp_head1 != None :
-                if new_head == None :
-                    new_head = temp_head1
-                else :
-                    new_p.next = temp_head1
-                    new_p = new_p.next
-                temp_head1 = temp_head1.next
-        return new_head
-
-pHead1 = ListNode(1, ListNode(3, ListNode(4)))
-pHead2 = ListNode(2, ListNode(5, ListNode(6)))
-
-
-
-
-class Solution5 :
-    def merge(self, pHead1, pHead2) :
-        merge_list = []
-        while pHead1 is not None :
-            merge_list.append(pHead1.val)
-            pHead1 = pHead1.next
-        while pHead2 is not None :
-            merge_list.append(pHead2.val)
-            pHead2 = pHead2.next
-        
-        merge_list = sorted(merge_list)
-        root = ListNode(merge_list[0])
-        p = root
-        for i in range(1, len(merge_list)) :
-            p.next = ListNode(merge_list[i])
+    def constructList(self, list) :
+        head = ListNode(list[0])
+        p = head
+        for i in range(1, len(list)) :
+            p.next = ListNode(list[i])
             p = p.next
-        return root 
+        return head
 
-# s = Solution5()
-# merged_head = s.merge(pHead1, pHead2)
-# t = merged_head
-# while t != None :
-#     print(t.val)
-#     t = t.next
-#   101
-# 111 << 1   11100
-print(7 << 1)
-            
+    def sort(self, list) :
+        ## -- 冒泡排序 -- 
+        for i in range(0, len(list)) :
+            for j in range(len(list) - i, len(list)) :
+                if list[j] > list[j + 1] :
+                    ## 交换
+                    list[j], list[j + 1] = list[j + 1], list[j]
+        return list 
 
-# class Solution3:
-    ## 这种方法不是题目考察的本意
-    # def Merge(self, pHead1, pHead2):
-    #     # write code here
-    #     if (pHead1 == None) :
-    #         return pHead2
-    #     if (pHead2 == None) :
-    #         return pHead1
-    #     all_val_list = self.getAllList(pHead1, pHead2)
-    #     self.sort(all_val_list)
-    #     return self.constructList(all_val_list)
+    ## 获取所有的值  
+    def getAllList(self, pHead1, pHead2) :
+        list = []
+        p1 = pHead1
+        while (p1 != None) :
+            list.append(p1.val)
+            p1 = pHead1.next
+        p1 = pHead2 
+        while (p2 != None) :
+            list.append(p2.val)
+            p2 = pHead2.val
+        return list
 
-    # def constructList(list) :
-    #     head = ListNode(list[0])
-    #     p = head
-    #     for i in range(1, len(list)) :
-    #         p.next = ListNode(list[i])
-    #         p = p.next
-    #     return head
+        
 
-    # def sort(list) :
-    #     ## -- 冒泡排序 -- 
-    #     for i in range(0, len(list)) :
-    #         for j in range(len(list) - i, len(list)) :
-    #             if list[j] > list[j + 1] :
-    #                 ## 交换
-    #                 list[j], list[j + 1] = list[j + 1], list[j]
-    #     return list 
+p1 = ListNode(1)
+p1.next = ListNode(3)
+p1.next.next = ListNode(5)
 
-    # ## 获取所有的值  
-    # def getAllList(pHead1, pHead2) :
-    #     list = []
-    #     p1 = pHead1
-    #     while (p1 != None) :
-    #         list.append(p1.val)
-    #         p1 = pHead1.next
-    #     p1 = pHead2 
-    #     while (p2 != None) :
-    #         list.append(p2.val)
-    #         p2 = pHead2.val
-    #     return list
+p2 = ListNode(2)
+p2.next = ListNode(4)
+p2.next.next = ListNode(6)
+
+s = Solution()
+print(s.Merge(p1, p2))
+        
+        
+
