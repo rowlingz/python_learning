@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="254cc402-be8d-42c1-b6f6-168dd8f1d465" name="Default" comment="网页读取分析数据-4 pandas 实现数据可视化">
+    <list default="true" id="254cc402-be8d-42c1-b6f6-168dd8f1d465" name="Default" comment="">
       <change beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/.idea/test.iml" afterPath="$PROJECT_DIR$/.idea/test.iml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -72,7 +71,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pandas_rockVmine.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="pandas_rockVmine.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/machinelearning_python_learningtest/pandas_rockVmine.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="539">
@@ -80,6 +79,16 @@
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="micro_code.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/micro_code.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="689">
+              <caret line="37" column="11" lean-forward="false" selection-start-line="21" selection-start-column="32" selection-end-line="37" selection-end-column="11" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -227,6 +236,11 @@
               <item name="Root" type="cbb8eebc:String" user="Root" />
               <item name="test" type="cbb8eebc:String" user="test" />
               <item name="machinelearning_python_learningtest" type="cbb8eebc:String" user="machinelearning_python_learningtest" />
+            </path>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="test" type="cbb8eebc:String" user="test" />
+              <item name="micro_crawer" type="cbb8eebc:String" user="micro_crawer" />
             </path>
             <path>
               <item name="Root" type="cbb8eebc:String" user="Root" />
@@ -701,7 +715,14 @@
       <option name="project" value="LOCAL" />
       <updated>1514204972760</updated>
     </task>
-    <option name="localTasksCounter" value="32" />
+    <task id="LOCAL-00032" summary="Merge branch 'master' of https://github.com/rowlingz/python_learning&#10;&#10;# Conflicts:&#10;#&#9;micro_code.py">
+      <created>1514205038046</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1514205038046</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TodoView">
@@ -717,11 +738,11 @@
     <frame x="-11" y="-11" width="1942" height="1042" extended-state="6" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31755915" sideWeight="0.5053996" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32876712" sideWeight="0.5080994" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Documentation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991362" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" x="0" y="0" width="435" height="842" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31755915" sideWeight="0.49460045" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.0" sideWeight="0.49352053" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32876712" sideWeight="0.49190065" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.49784017" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20734341" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -795,9 +816,9 @@
     <MESSAGE value="网页读取分析数据-1" />
     <MESSAGE value="网页读取分析数据-2" />
     <MESSAGE value="网页读取分析数据-3数据集统计特征" />
-    <MESSAGE value="Merge branch 'master' of https://github.com/rowlingz/python_learning&#10;&#10;# Conflicts:&#10;#&#9;micro_code.py" />
     <MESSAGE value="网页读取分析数据-4 pandas 实现数据可视化" />
-    <option name="LAST_COMMIT_MESSAGE" value="网页读取分析数据-4 pandas 实现数据可视化" />
+    <MESSAGE value="Merge branch 'master' of https://github.com/rowlingz/python_learning&#10;&#10;# Conflicts:&#10;#&#9;micro_code.py" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/rowlingz/python_learning&#10;&#10;# Conflicts:&#10;#&#9;micro_code.py" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1089,13 +1110,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/micro_code.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-175">
-          <caret line="29" column="69" lean-forward="true" selection-start-line="29" selection-start-column="69" selection-end-line="29" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/machinelearning_python_learningtest/rockVmine.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1696">
@@ -1113,6 +1127,14 @@
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/micro_code.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="689">
+          <caret line="37" column="11" lean-forward="false" selection-start-line="21" selection-start-column="32" selection-end-line="37" selection-end-column="11" />
+          <folding />
         </state>
       </provider>
     </entry>
