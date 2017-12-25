@@ -3,6 +3,7 @@
 import urllib.request
 import http.cookiejar
 import json,os,sys
+import requests
 
 class LagouCrawer :
     def __init__(self) :
@@ -72,15 +73,15 @@ class LagouCrawer :
         
     def store_file(self, path, list) :
         try :
-            # file = open(path, mode='a')
-            # for p in list :
-            #     try :
-            #         for k in p.keys() :
-            #             file.write(k + '=' + str(p[k]))
-            #         file.write('\n')
-            #     except Exception as e :
-            #         print(e)
-            # file.close()
+            file = open(path, mode='a')
+            for p in list :
+                try :
+                    for k in p.keys() :
+                        file.write(k + '=' + str(p[k]))
+                    file.write('\n')
+                except Exception as e :
+                    print(e)
+            file.close()
         except Exception as e :
             print(e)
             print("写入失败")
@@ -91,4 +92,5 @@ lagou_crawer = LagouCrawer()
 list = lagou_crawer.crawer_search('机器学习','成都')
 lagou_crawer.print_result(list)
 lagou_crawer.store_file(sys.path[0] + '/' + 'lagou.txt', list)
+
 
