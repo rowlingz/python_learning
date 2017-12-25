@@ -1,6 +1,8 @@
 # 从网页上读取统计数据
 import urllib.request
 import numpy as np
+import pylab
+import scipy.stats as stats
 import sys
 
 # 1. read data from uci data repository
@@ -72,6 +74,11 @@ for n_per in n_pers:
         percen_bdry.append(np.percentile(col_array, i * 100 / n_per))
     percen_bdrys[str(n_per)] = percen_bdry
 print(percen_bdrys)
+
+# 采用分位数图（Q-Q）确定异常点
+stats.probplot(col_data, dist="norm", plot=pylab)
+pylab.show()
+
 
 # 类别型属性--具体类别及数量分布(以col#60为例)
 col = 60
