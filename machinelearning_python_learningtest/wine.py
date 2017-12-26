@@ -41,7 +41,7 @@ plot.show()
 min_quality = summary.iloc[3, (n_cols - 1)]
 max_quality = summary.iloc[7, (n_cols - 1)]
 for i in range(n_rows):
-    data_rows = wine_data.iloc[i, 0:n_cols]
+    data_rows = wine_data.iloc[i, 0: (n_cols - 1)]
     label_color = (wine_data.iloc[i, (n_cols - 1)] - min_quality)/(max_quality - min_quality)
     data_rows.plot(color=plot.cm.RdYlBu(label_color), alpha=0.5)
 plot.xlabel("Attribute Index")
@@ -52,7 +52,7 @@ plot.show()
 mean_quality = summary.iloc[1, (n_cols - 1)]
 std_quality = summary.iloc[2, (n_cols - 1)]
 for i in range(n_rows):
-    data_rows = wine_data.iloc[i, 0:n_cols]
+    data_rows = wine_data.iloc[i, 0: (n_cols - 1)]
     norm_target = (wine_data.iloc[i, (n_cols - 1)] - mean_quality) / std_quality
     label_color = 1.0 / (1.0 + exp(-norm_target))
     data_rows.plot(color=plot.cm.RdYlBu(label_color), alpha=0.5)
@@ -69,7 +69,7 @@ for j in range(n_cols):
     wine_data_Norm.iloc[:, j:(j + 1)] = (wine_data_Norm.iloc[:, j:(j + 1)] - mean) / std
 
 for i in range(n_rows):
-    data_rows = wine_data_Norm.iloc[i, 0:n_cols]
+    data_rows = wine_data_Norm.iloc[i, 0: (n_cols - 1)]
     norm_target = wine_data_Norm.iloc[i, (n_cols - 1)]      # 归一化后，无需将属性值压缩
     label_color = 1.0 / (1.0 + exp(-norm_target))
     data_rows.plot(color=plot.cm.RdYlBu(label_color), alpha=0.5)
