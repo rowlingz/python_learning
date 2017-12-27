@@ -12,14 +12,14 @@ import time,random
 # print('不存在')
 
 
-result = requests.get('http://www.yinyuetai.com/')
+# result = requests.get('http://www.yinyuetai.com/')
 ## test requests lib
 # if (result.status_code == 200) :
 #     print(result.text.encode(result.encoding).decode('utf-8'))
 url = 'http://www.zhipin.com'
 base_url = url + '/job_detail/?'
 query_params = {
-    'query':'算法',
+    'query':'机器学习',
     'scity':'101210100',
     'source':'1'
 }
@@ -34,57 +34,65 @@ headers = {
     'Upgrade-Insecure-Requests':'1',
     'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
 }
-page_index = 4
-while True :
-    query_params['page'] = page_index
-    print('开始爬取 ---- > ' + str(page_index) + '页')
-    result = requests.get(url = 'http://www.zhipin.com/job_detail/?query=%E7%AE%97%E6%B3%95&scity=101210100&source=2' , params = query_params, headers = headers)
-    if result.status_code == 200 :
-        
-        # print(result.text.encode(result.encoding).decode('utf-8'))
-        html_body = result.text.encode(result.encoding).decode('utf-8')
-        ## 打印整个文本
-        # print(html_body)
-        soup = BeautifulSoup(html_body,'html.parser')
-        ## 打印指定标签
-        # print(soup.li)
-        ## prettify打印html文件内容
-        # print(soup.prettify())
-        position_list = soup.find_all(name = 'a')
-
-        ## 跳转链接
-        content_url_list = []
-        for position in position_list :
-            if len(position.get('href')) >= 12 and '/job_detail/' == position.get('href')[0:12] :
-                print('获取的url : ' + position.get('href'))
-                content_url_list.append(position.get('href'))
-        if len(content_url_list) == 0 :
+proxies = {'HTTP', 'http://118.193.107.36:80'}
+page_index = 3
+with open(file = sys.path[0] + '/data/boss.txt', mode='a') as file :
+    while True :
+        query_params['page'] = page_index
+        print('开始爬取 ---- > ' + str(page_index) + '页')
+        if page_index >= 4 :
             break
-        ## 爬取每个页面的描述k -> 链接, v -> 描述
-        desp_map = {}
-        for content_url in content_url_list :
-            next_url = url + content_url
-            print('每个具体职位请求休眠一下')
-            time.sleep(random.randint(3,5))
-            print('启动...')
-            result = requests.get(url = next_url, params=None, headers = headers)
-            if result.status_code == 200 :
-                html_body = result.text.encode(result.encoding).decode('utf-8')
-                soup = BeautifulSoup(html_body, 'html.parser')
-                desc_list = soup.find_all(name = 'div', attrs={'class' : 'text'})
-                if desc_list is not None and len(desc_list) > 0 :
-                    for desc in desc_list :
-                        print(desc.text)
-                        print('--------- 分割线 --------')
-                        desp_map[url] = desc.text
-            else :
-                print('http status -> ' + str(result.status_code) + ', reason -> ' + result.reason)
+        try :
+            result = requests.get(url = 'http://www.zhipin.com/job_detail/?query=%E7%AE%97%E6%B3%95&scity=101210100&source=2' , params = query_params, headers = headers, proxies = None)
+        except Exception as err:
+            print(' request error ')
+            exit(0)
+        if result.status_code == 200 :
+            # print(result.text.encode(result.encoding).decode('utf-8'))
+            html_body = result.text.encode(result.encoding).decode('utf-8')
+            ## 打印整个文本
+            # print(html_body)
+            soup = BeautifulSoup(html_body,'html.parser')
+            ## 打印指定标签
+            # print(soup.li)
+            ## prettify打印html文件内容
+            # print(soup.prettify())
+            position_list = soup.find_all(name = 'a')
+            ## 跳转链接
+            content_url_list = []
+            for position in position_list :
+                if len(position.get('href')) >= 12 and '/job_detail/' == position.get('href')[0:12] :
+                    print('获取的url : ' + position.get('href'))
+                    content_url_list.append(position.get('href'))
+            if len(content_url_list) == 0 :
                 break
-        page_index += 1
-    elif result.status_code == 403 :
-        print('服务被拒绝了')
-    else :
-        print('http status = ' + str(result.status_code) + ", reason = " + result.reason)
-        break
+            ## 爬取每个页面的描述k -> 链接, v -> 描述
+            desp_map = {}
+            for content_url in content_url_list :
+                next_url = url + content_url
+                print('request position detail , url ' + next_url + ', random sleep ')
+                time.sleep(random.randint(3,5))
+                print('restart crawer...')
+                result = requests.get(url = next_url, params=None, headers = headers)
+                if result.status_code == 200 :
+                    html_body = result.text.encode(result.encoding).decode('utf-8')
+                    soup = BeautifulSoup(html_body, 'html.parser')
+                    desc_list = soup.find_all(name = 'div', attrs={'class' : 'text'})
+                    if desc_list is not None and len(desc_list) > 0 :
+                        for desc in desc_list :
+                            print(desc.text)
+                            print('--------- 分割线 --------')
+                            desp_map[url] = desc.text
+                            file.write(desc.text + '\n')
+                else :
+                    print('http status -> ' + str(result.status_code) + ', reason -> ' + result.reason)
+                    break
+            page_index += 1
+        elif result.status_code == 403 :
+            print('服务被拒绝了')
+            break
+        else :
+            print('http status = ' + str(result.status_code) + ", reason = " + result.reason)
+            break
 
 ## IP被限制，考虑代理
