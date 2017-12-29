@@ -4,6 +4,7 @@ import pandas as pd
 import numpy
 from sklearn import linear_model
 from math import sqrt
+import matplotlib.pyplot as plt
 
 
 def x_attr_select(x, x_set):
@@ -81,3 +82,38 @@ for i in index:
 
 print("Out of sample error versus attribute set size")
 print(oss_error)
+
+
+# Plot error versus number of attributes
+x = range(len(oss_error))
+plt.plot(x, oss_error, 'k')
+plt.xlabel('Number of Attributes')
+plt.ylabel('Error (RMS)')
+plt.show()
+
+
+# Plot histogram of out of sample errors for best number of attributes
+index_best = oss_error.index(min(oss_error))        # 返回oss_error最小值所在处的索引
+attributes_best = att_list[:(index_best + 1)]       # 截取误差最小时的属性列组合
+
+# Define column-wise subsets of xListTrain and xListTest
+x_train_best = x_attr_select(xlist_train, attributes_best)
+x_test_best = x_attr_select(xlist_test, attributes_best)
+x_train = numpy.array(x_train_best)
+y_train = numpy.array(labels_train)
+x_test = numpy.array(x_test_best)
+y_test = numpy.array(labels_test)
+wine_model = linear_model.LinearRegression()
+wine_model.fit(x_train, y_train)
+
+error_vector = y_test - wine_model.predict(x_test)
+plt.hist(error_vector)
+plt.xlabel("Bin Boundaries")
+plt.ylabel("Counts")
+plt.show()
+
+# scatter plot of actual versus predicted
+plt.scatter(wine_model.predict(x_test), y_test, s=100, alpha=0.10)
+plt.xlabel('Predicted Taste Score')
+plt.ylabel('Actual Taste Score')
+plt.show()
