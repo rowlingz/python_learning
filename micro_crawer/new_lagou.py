@@ -4,6 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import time,random
+import crawer_dao
+
 # print(sys.modules.keys())
 # for k in sys.modules.keys() :
 #     if k == 'requests' :
@@ -11,18 +13,18 @@ import time,random
 #         exit(0)
 # print('不存在')
 
-
 # result = requests.get('http://www.yinyuetai.com/')
-## test requests lib
+# # test requests lib
 # if (result.status_code == 200) :
 #     print(result.text.encode(result.encoding).decode('utf-8'))
 url = 'http://www.zhipin.com'
 base_url = url + '/job_detail/?'
 query_params = {
-    'query':'机器学习',
+    'query':'Java',
     'scity':'101210100',
     'source':'1'
 }
+dao = crawer_dao.position_dao()
 headers = {
     'Accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
     'Accept-Encoding':'gzip, deflate',
@@ -35,13 +37,11 @@ headers = {
     'User-Agent':'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36'
 }
 proxies = {'HTTP', 'http://118.193.107.36:80'}
-page_index = 3
-with open(file = sys.path[0] + '/data/boss.txt', mode='a') as file :
+page_index = 5
+with open(file = sys.path[0] + '/data/boss.txt', mode='w') as file :
     while True :
         query_params['page'] = page_index
         print('开始爬取 ---- > ' + str(page_index) + '页')
-        if page_index >= 4 :
-            break
         try :
             result = requests.get(url = 'http://www.zhipin.com/job_detail/?query=%E7%AE%97%E6%B3%95&scity=101210100&source=2' , params = query_params, headers = headers, proxies = None)
         except Exception as err:
@@ -62,7 +62,6 @@ with open(file = sys.path[0] + '/data/boss.txt', mode='a') as file :
             content_url_list = []
             for position in position_list :
                 if len(position.get('href')) >= 12 and '/job_detail/' == position.get('href')[0:12] :
-                    print('获取的url : ' + position.get('href'))
                     content_url_list.append(position.get('href'))
             if len(content_url_list) == 0 :
                 break
@@ -75,15 +74,39 @@ with open(file = sys.path[0] + '/data/boss.txt', mode='a') as file :
                 print('restart crawer...')
                 result = requests.get(url = next_url, params=None, headers = headers)
                 if result.status_code == 200 :
-                    html_body = result.text.encode(result.encoding).decode('utf-8')
-                    soup = BeautifulSoup(html_body, 'html.parser')
-                    desc_list = soup.find_all(name = 'div', attrs={'class' : 'text'})
-                    if desc_list is not None and len(desc_list) > 0 :
-                        for desc in desc_list :
-                            print(desc.text)
-                            print('--------- 分割线 --------')
-                            desp_map[url] = desc.text
-                            file.write(desc.text + '\n')
+                    try :
+                        html_body = result.text.encode(result.encoding).decode('utf-8')
+                        soup = BeautifulSoup(html_body, 'html.parser')
+                        ## 每个具体页面
+                        positon_model = {}
+                        ## 解析html
+                        city = soup.find_all(name = 'em', attrs={'class' : 'vline'})[1].find_parent().contents[0].string
+                        salary = soup.find(name = 'span', attrs={'class' : 'badge'}).contents[0]
+                        position_name = soup.find(name = 'h1', attrs={'class' : 'name'}).contents[0].string
+                        query = query_params['query']
+
+                        positon_model['city'] = city
+                        positon_model['salary'] = salary
+                        positon_model['position_name'] = position_name
+                        positon_model['type'] = query
+                        desc_list = soup.find_all(name = 'div', attrs={'class' : 'text'})
+                        desp = None
+                        if desc_list is not None and len(desc_list) > 0 :
+                            for desc in desc_list :
+                                print(desc.text)
+                                print('--------- 分割线 --------')
+                                desp_map[url] = desc.text
+                                desp = desc.text
+                        if desp is not None :
+                            positon_model['detail_info'] = desp
+                        result = dao.insert_position(positon_model)
+                        if result :
+                            print('insert ok ')
+                        else :
+                            print('dao error')
+                    except Exception as err :
+                        print(err)
+                        continue
                 else :
                     print('http status -> ' + str(result.status_code) + ', reason -> ' + result.reason)
                     break
@@ -96,3 +119,19 @@ with open(file = sys.path[0] + '/data/boss.txt', mode='a') as file :
             break
 
 ## IP被限制，考虑代理
+
+position = {
+    'city' : '成都',
+    'position_name' : '测试职位',
+    'detail_info' : '测试详细信息',
+    'salary' : 10,
+    'type' : '机器学习'
+}
+
+# dao = crawer_dao.position_dao()
+# for i in range(10) : 
+#     insert_result = dao.insert_position(position)
+#     if insert_result :
+#         print('插入成功')
+#     else :
+#         print('插入失败!!')
