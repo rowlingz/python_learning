@@ -137,5 +137,17 @@ if result.status_code == 200 :
             if detail_result.status_code == 200 :
                 # print html body
                 print(detail_result.text)
-                soup = BeautifulSoup(detail_result.text.encode(detail_result.encoding).decode('utf-8'))
-                print(type(soup))
+                soup = BeautifulSoup(detail_result.text.encode(detail_result.encoding).decode('utf-8'), 'html.parser')
+                position_name = soup.find(name = 'span', attrs={'class' : 'ceil-job'}).text
+                salary = soup.find(name = 'span', attrs={'class' : 'ceil-salary'}).text
+                detail_info = soup.find(name = 'h3', attrs={'class' : 'description'}).find_next_sibling().text
+
+                postion = {
+                    'position_name' : position_name,
+                    'salary' : salary,
+                    'detail_info' : detail_info,
+                    'city' : params['city'],
+                    'type' : post_data['kd']
+                }
+
+                print(postion)
