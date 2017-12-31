@@ -4,7 +4,8 @@ import urllib.request
 import http.cookiejar
 import json,os,sys
 import requests
-
+from bs4 import BeautifulSoup
+import crawer_dao
 class LagouCrawer :
     def __init__(self) :
         print('爬虫已经启动...请稍等')
@@ -88,9 +89,79 @@ class LagouCrawer :
 
 
 ## 
-lagou_crawer = LagouCrawer()
-list = lagou_crawer.crawer_search('机器学习','成都')
-lagou_crawer.print_result(list)
-lagou_crawer.store_file(sys.path[0] + '/' + 'lagou.txt', list)
+# lagou_crawer = LagouCrawer()
+# list = lagou_crawer.crawer_search('机器学习','成都')
+# lagou_crawer.print_result(list)
+# lagou_crawer.store_file(sys.path[0] + '/' + 'lagou.txt', list)
 
 
+url = 'https://www.lagou.com/jobs/positionAjax.json'
+
+def load_json_file(path) :
+        try :
+            file = open(file = path, mode = 'r', encoding = 'utf-8')
+            return json.load(file)
+        except IOError as err:
+            print("open file error")
+            print(err)
+
+headers_file = load_json_file(sys.path[0] + '/headers.json')
+list_headers = headers_file['position_list_headers']
+detail_headers = headers_file['detail_page_headers']
+params = {
+    'city':'杭州',
+    'needAddtionalResult':'false',
+    'isSchoolJob':0
+}
+
+target_url = url + '?city=' + params['city'] +'&needAddtionalResult=' + params['needAddtionalResult'] + '&isSchoolJob=' + str(params['isSchoolJob'])
+
+post_data = {
+    'first':'true',
+    'pn':1,
+    'kd':'python'
+}
+dao = crawer_dao.position_dao()
+# detail base
+detail_base_url = 'https://www.lagou.com/jobs/'
+while True :
+    try :
+        post_data['pn'] = post_data['pn'] + 1
+        result = requests.post(url = target_url, headers = list_headers, data = post_data)
+        if result.status_code == 200 :
+            # print(result.text)
+            position_list = json.loads(result.text)['content']['positionResult']['result']
+            if position_list is not None and len(position_list) > 0 :
+                for p in position_list :
+                    detail_id = p['positionId']
+                    detail_url = detail_base_url + str(detail_id) + '.html'
+                    try :
+                        detail_result = requests.get(url = detail_url, headers = detail_headers)
+                        if detail_result.status_code == 200 :
+                            # print html body
+                            soup = BeautifulSoup(detail_result.text.encode(detail_result.encoding).decode('utf-8'), 'html.parser')
+                            position_name = soup.find(name = 'span', attrs={'class' : 'ceil-job'}).text
+                            salary = soup.find(name = 'span', attrs={'class' : 'ceil-salary'}).text
+                            detail_info = soup.find(name = 'h3', attrs={'class' : 'description'}).find_next_sibling().text
+
+                            postion = {
+                                'position_name' : position_name,
+                                'salary' : salary,
+                                'detail_info' : detail_info,
+                                'city' : params['city'],
+                                'type' : post_data['kd']
+                            }
+                            print('insert ' + str(postion))
+                            dao.insert_position(postion)
+                    except Exception as err :
+                        print(err)
+                print('下一页...')
+            elif len(position_list) < 15 :
+                print('最后一页了')
+            else :
+                break
+        else :
+            print('http status error code = ' + str(result.status_code))
+    except Exception as err :
+        print(err)
+        break
