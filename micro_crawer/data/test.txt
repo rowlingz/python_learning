@@ -1,0 +1,13 @@
+Host:www.lagou.com,
+Connection:keep-alive,
+Content-Length:23,
+Origin:https://www.lagou.com,
+X-Anit-Forge-Code:0,
+User-Agent:Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Safari/537.36,
+Content-Type:application/x-www-form-urlencoded;  charset=UTF-8,
+Accept:application/json, text/javascript, * / *q = 0.01,
+X-Requested-With:XMLHttpRequest,
+Referer:https://www.lagou.com/jobs/list_%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0?labelWords=&fromSearch=true&suginput=,
+Accept-Encoding:gzip, deflate, br,
+Accept-Language:zh-CN,zh;q=0.9,
+Cookie:user_trace_token=20171013151921-d51c4d7f-afe6-11e7-920c-525400f775ce; LGUID=20171013151921-d51c5013-afe6-11e7-920c-525400f775ce; index_location_city=%E6%9D%AD%E5%B7%9E; JSESSIONID=ABAAABAAAGGABCB649C7E725F4440FABC7F3B38BB0A1DDD; _ga=GA1.2.1234188026.1514296126; Hm_lvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1514296126; _gid=GA1.2.1271519235.1514642120; TG-TRACK-CODE=search_code; LGSID=20171231213026-c2f5a1e3-ee2e-11e7-b937-525400f775ce; X_HTTP_TOKEN=6abaa219e3ab1d8bc96c32922d0baf03; _gat=1; Hm_lpvt_4233e74dff0ae5bd0a3d81c6ccf756e6=1514729080; LGRID=20171231220440-8b23ccee-ee33-11e7-9fc4-5254005c3644; SEARCH_ID=e939e05fffb946a2ac6fcfc390c6a834
