@@ -32,16 +32,12 @@ for j in range(n_cols):
     stds.append(summary.iloc[2, j])
 
 # 归一化
-xlist = []
-label = []
+xlist = numpy.array(data.iloc[:, 0:(n_cols - 1)])
+label = numpy.array(data.iloc[:, (n_cols - 1)])
 for i in range(n_rows):
-    xlist.append([])
-    label.append([])
-    for j in range(n_cols):
-        if j != (n_cols - 1):
-            xlist[i].append((data.iloc[i, j] - means[j]) / stds[j])
-        else:
-            label[i].append((data.iloc[i, j] - means[j]) / stds[j])
+    for j in range(n_cols - 1):
+        xlist[i][j] = (xlist[i][j] - means[j]) / stds[j]
+    label[i] = (label[i] - means[-1]) / stds[-1]
 
 x = numpy.array(xlist)
 y = numpy.array(label)
@@ -58,8 +54,9 @@ for i in range(n_rows):
 print(xy)
 max_xy = 0.0
 for j in range(n_cols):
-    val = x[j][0] / n_rows
-    if val > max_xy:
+    val = x[j] / n_rows
+
+    if val.all > max_xy:
         max_xy = val
 
 lam = max_xy / alpha
