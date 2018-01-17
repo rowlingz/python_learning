@@ -3,9 +3,15 @@ import os
 import sys
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "micro_web.settings")
     try:
         from django.core.management import execute_from_command_line
+        import django
+        django.setup()
+
+        # Override default port for `runserver` command
+        from django.core.management.commands.runserver import Command as runserver
+        runserver.default_port = "80"
     except ImportError as exc:
         raise ImportError(
             "Couldn't import Django. Are you sure it's installed and "
