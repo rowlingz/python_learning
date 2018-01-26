@@ -1,53 +1,57 @@
 import requests
 from bs4 import BeautifulSoup
 import pymysql
+import time
 
 url1 = "https://movie.douban.com/top250?start=0&filter="
 url2 = "https://movie.douban.com/top250?start=25&filter="
 
 # 每页的request url
-for i in range(10):
-    page = i * 25
-    page_url = "https://movie.douban.com/top250?start=%d&filter=" % page
-    # print(page_url)
+# for i in range(10):
+#     page = i * 25
+#     page_url = "https://movie.douban.com/top250?start=%d&filter=" % page
+#     # print(page_url)
 
 
 # 每页解析，获取信息（排名、片名、年份、国家、类型、标签、评分、评论人数、是否可播放）
-response = requests.get(url1)
-html_data = response.text.encode(response.encoding).decode('utf-8')
-bf = BeautifulSoup(html_data, 'html.parser')
-all_moive_items = bf.find_all('div', class_='item')
-
-# i = 1
-# for each_moive in all_moive_items:
-#     print(i)
 
 
-def insert_into_mysql(table, movie_infor):
+def insert_into_mysql(movie_infor):
+    """单条记录插入"""
     coon = pymysql.connect(host="localhost", user="root", password="root", database="test", port=3306, charset="utf8")
 
-    sql_insert = "INSERT INTO %s VALUES %s"
+    sql_insert = "INSERT INTO movie " \
+                 "(number, name, link_url, years, country, labels, player, score, comments_num, quote) " \
+                 "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
 
     cur = coon.cursor()
-    cur.execute(sql_insert, (table, movie_infor))
-    cur.close()
-    coon.commit()
-    coon.close()
+    try:
+        cur.execute(sql_insert, movie_infor)
+        coon.commit()
+    except Exception as e:
+        print("排名为 " + str(movie_infor[0]) + "插入失败" + str(e))
+    finally:
+        cur.close()
+        coon.close()
 
 
 def get_each_movie_infor(each_movie):
-    number = each_moive.find('em').string
 
-    # 片名
-    name = each_moive.find('span', attrs={'class': 'title'}).string
+    number = int(each_movie.find('em').string)
 
-    # 链接
-    link_url = each_moive.a.attrs['href']
+    # 片名--string
+    name = each_movie.find('span', attrs={'class': 'title'}).string
 
-    info_list = each_moive.find('p').contents[2].string.strip().split('/')
+    # 链接--string
+    link_url = each_movie.a.attrs['href']
+
+    info_list = each_movie.find('p').contents[2].string.strip().split('/')
 
     # 年份
-    years = int(info_list[0].strip())
+    try:
+        years = int(info_list[0].strip()[:4])
+    except Exception as e_year:
+        print(name + "查询出现错误,为： " + e_year)
 
     # 国家
     country = info_list[1]
@@ -56,16 +60,62 @@ def get_each_movie_infor(each_movie):
     labels = info_list[2]
 
     # 有无播放源
-    player = True
-    if each_moive.find('playable') is None:
-        player = False
+    player = each_movie.find('span', attrs={'class': 'playable'})
+    if player:
+        player = "是"
+    else:
+        player = "否"
 
-    score_info = each_moive.find('div', attrs={'class': 'star'})
+    score_info = each_movie.find('div', attrs={'class': 'star'})
     # 评分
-    score = float(score_info.find_all('span')[1].string)
+    score = float(score_info.find('span', attrs={'class': 'rating_num'}).string)
+
     # 评论数
     comments_num = int(score_info.find_all('span')[-1].string[:-3])
 
     # 简介
-    quote = each_moive.find('span', attrs={'class': 'inq'}).string
+    quote = each_movie.find('span', attrs={'class': 'inq'})
+    if quote:
+        quote = quote.string
+    else:
+        quote = None
 
+    # 汇总
+    movie_infor = (number, name, link_url, years, country, labels, player, score, comments_num, quote)
+    # print(movie_infor)
+    return movie_infor
+
+
+def each_page_infor(page_url):
+    response = requests.get(page_url)
+    html_data = response.text.encode(response.encoding).decode('utf-8')
+    bf = BeautifulSoup(html_data, 'html.parser')
+    all_moive_items = bf.find_all('div', class_='item')
+    for each_movie in all_moive_items:
+        each_infor = get_each_movie_infor(each_movie)
+        try:
+            insert_into_mysql(each_infor)
+        except Exception:
+            pass
+
+
+def get_infor_from_web(url):
+    for i in range(10):
+        page = i * 25
+        page_url = url % page
+        try:
+            each_page_infor(page_url)
+            print("完成第" + str(i + 1) + "页")
+        except Exception as e:
+            print("第" + str(i + 1) + "页出错" + str(e))
+
+        time.sleep(3)
+    print('end')
+
+
+# 网页模板
+url = "https://movie.douban.com/top250?start=%d&filter="
+
+if __name__ == '__main__':
+    get_infor_from_web(url)
+    print("完成")
