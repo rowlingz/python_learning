@@ -93,10 +93,11 @@ def each_page_infor(page_url):
     all_moive_items = bf.find_all('div', class_='item')
     for each_movie in all_moive_items:
         each_infor = get_each_movie_infor(each_movie)
-        try:
-            insert_into_mysql(each_infor)
-        except Exception:
-            pass
+        print(each_infor)
+        # try:
+        #     insert_into_mysql(each_infor)
+        # except Exception:
+        #     pass
 
 
 def get_infor_from_web(url):
