@@ -1,0 +1,38 @@
+# hive 进阶
+
+========================
+数据的导入
+
+适用于一个文件的导入
+load data local inpath '系统指定路径' into table t1;
+
+
+指定目录下所有文件的导入
+load data local inpath '系统指定目录' overwrite(覆盖原来数据) into table t1;
+
+将HDFS中指定文件导入到
+load data inpath 'hdfs文件' overwrite(覆盖原来数据) into table t1;
+
+导入分区表
+load data local inpath '文件目录' into table partition_table(分区表表名) partition (分区列=属性值*);
+
+==============================
+Sqoop进行数据的导入和导出
+
+由数据库--->HDFS
+
+./sqoop import --connect () --username () --password () --table () ---columns '' -m (进程数)
+ --target-dir '目标目录';
+
+由数据库--->Hive
+
+./sqoop import --hive-import --connect () --username () --password () --table ()
+---columns '' -m (进程数) --target-dir '目标目录' --hive-table (hive表名)
+--where '条件';
+
+由数据库--->Hive 使用查询语句
+./sqoop import --hive-import --connect () --username () --password () --table () ---columns '' -m (进程数)
+--query '查询语句 AND $CONDITIONS' --target-dir '目标目录' --hive-table (hive表名);
+
+由Hive导出到数据库中
+。/sqoop export --connect () --username () --password () --table () -m (进程数) --table (表名) --export-dir (目标)
