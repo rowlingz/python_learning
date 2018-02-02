@@ -1,7 +1,13 @@
 import pandas as pd
+import pymysql
+from sqlalchemy import create_engine
 
 sensor_data = pd.read_csv('merged-sensor-files.csv',
                           names=['MTU', 'Time', 'Power', 'Cost', 'Voltage'], header=0)
+# 将dataframe数据写入mysql
+connect = create_engine('mysql+pymysql://root:root@localhost:3306/njust')
+sensor_data.to_sql(name='sensor', con=connect, if_exists='append', index=False, index_label=False)
+print('end')
 
 # 获取数据列表中指定列（usecols）,指定行(nrows)
 data = pd.read_csv('merged-sensor-files.csv', usecols=[1, 2], names=['date', 'power'], header=0, nrows=10)
