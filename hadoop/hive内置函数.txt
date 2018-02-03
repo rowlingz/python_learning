@@ -1,0 +1,60 @@
+hive内置函数
+
+
+1、数学函数
+round   四舍五入  第一个参数为处理数字，第二个参数为保留几位小数，
+
+值从0开始，表明针对个位-十位-百位
+select round(45.926,2),round(45.926,1),round(45.926,0),round(45.926,-1),round(45.926,-2);
+对应输出：
+45.93   45.9    46.0    50.0    0.0
+
+
+ceil    向上取整
+select ceil(45.96);         输出为46
+
+floor   向下取整
+select floor(45.909);       输出为45
+
+2、字符函数
+lower   转成小写
+upper   转成大写
+length  字符数
+concat  拼接字符串
+substr  求子串
+substr(a,b)     从a中从b开始取后面所有的字符串
+substr(a,b,c)   从a中，从b位取，取c个字符；
+trim    去掉前后的空格
+
+lpad    左填充
+select lpad('adcd',10,'*');     将前一个字符串字符数扩充10，不足的在左边用‘*’填充。
+******abcd
+
+rpad    右填充
+select rpad('adcd',10,'*');     将前一个字符串字符数扩充10，不足的在右边用‘*’填充。
+abcd******
+
+3、收集函数
+size        返回map集合中的个数
+size(map(<key,value>,<key,value>))
+select size(map(1,'Tom',2,'Mary'))      返回2
+
+
+=================================
+4、转换函数  cast     将某个转换为指定类型   float/date/···
+select cast(1 as float);    将1转换为float类型。
+
+
+=============================
+5、日期函数
+to_date/year/moth/day         返回字符中的日期部分/年/月/日
+
+weekofyear      返回指定日期所在哪个星期
+
+datediff        返回两个日期相差天数
+
+date_add/date_sub       当前日期加上/减去几天的日期
+select date_add('2011-12-7',3)      返回2011-12-10
+
+
+6、
