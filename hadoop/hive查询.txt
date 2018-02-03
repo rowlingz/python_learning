@@ -1,0 +1,42 @@
+查询所有信息：(不需要转换为MR作业)
+select * from table_name;
+
+查询指定列，支持算术表达式(转换为MR作业)[null存在时，注意会导致结果为空值，可使用nvl函数将其转换为指定值]
+select sal, sal*12 from table_name;
+select sal, sal*12, comm, sal*12+nvl(comm, 0) from table_name;
+
+
+查询comm为空的记录
+select * from tabel_name where comm is null
+
+
+使用distinct去除重复记录，是的查询结果只留下非重复的
+select distinct gender from table_name;     输出gener不同的记录
+select distinct gender, age from table_name;        只要gender, age组合不一样，则是视为不一样。
+
+======================================
+where子句的使用
+select * from table_name where gender='F' and age<20;
+
+
+====================================================
+模糊查询——like,  通配符的使用
+select * from table_name where sname like '%ke';
+
+
+=======================================
+结果排序 （默认升序）——[order by 字段名/表达式/别名/序号]
+含null---升序 排在最前  可nvl(comm, 0)将null排至最后
+        降序  排在最后
+
+select sname, age from table_name order by age;
+
+使用序号（所要查询的列的排序），使用之前要设置
+set hive.groupby.orderby.position.alias=true;
+select sname, age, gender from student1 order by 2;     2等同与按age排序
+
+添加desc按降序排序
+select sname, age from table_name order by age desc;
+
+
+=============================================
