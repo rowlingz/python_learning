@@ -57,4 +57,31 @@ date_add/date_sub       当前日期加上/减去几天的日期
 select date_add('2011-12-7',3)      返回2011-12-10
 
 
-6、
+6、条件函数
+
+coalesce(字段*，*) 输出找到第一不为null的值，成为新的一列
+
+    select sname, age, coalesce(id,age) from stu;
+
+
+case    when
+    CASE a WHEN b THEN c [WHEN d THEN e]* [ELSE f] END
+
+select sname, age, case age when 20 then age*10 when 18 then age from stu;
+    case语句输出新的一列
+
+
+7、聚合函数
+count       count(*)    返回列数， count（指定一列）    当前列的行数
+sum/min/max/avg(指定一列)    返回当前列的sum/min/max/avg
+
+
+
+8、表生成函数--explode
+explode
+将map中每个key-value对生成一行
+select explode(map(1,'tom',2,'nay'));
+输出为：
+1   'tom'
+2   'nay'
+
