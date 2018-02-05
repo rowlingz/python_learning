@@ -1,0 +1,61 @@
+
+等值连接-----------连接条件中含等号'='
+
+select e.ename,e.sal,d.dname
+from emp e,dept d
+where e.deptno=d.deptno;
+
+
+
+不等值连接操作----------
+
+select e.empno,e.ename,e.sal,e.deptno,s.grade
+from emp e,salgrade s
+where e.sal between s.losal and s.hisal;     ===> between (low) and (high)  在某个区间
+
+select e.empno,e.ename,e.sal,e.deptno
+from emp e
+where e.sal < 2000;
+
+
+内连接
+
+select d.deptno, d.dname,e.empno
+from emp e,dept d
+where e.deptno=d.deptno;
+
+1.0     A       1.0
+3.0     C       2.0
+2.0     B       3.0
+1.0     A       4.0
+
+
+select d.deptno, d.dname,count(e.empno)
+from emp e,dept d
+where e.deptno=d.deptno
+group by d.deptno, d.dname;                 采用group by 将未统计的进行分组
+
+1.0     A       2
+2.0     B       1
+3.0     C       1
+
+
+===================================
+外连接
+将连接条件不成立的结果仍包含在最后结果中
+--左外连接      连接条件不成成立时，连接条件左边表仍可包含在最后结果中
+--右外连接      连接条件不成成立时，连接条件右边表仍可包含在最后结果中
+
+select d.deptno, d.dname,count(e.empno)
+from emp e right outer join dept d
+on (e.deptno=d.deptno)
+group by d.deptno, d.dname;
+
+
+===========================
+自连接
+    通过表的别名将同一张表视为多张表
+
+select e.ename, b.ename, b.empno
+from emp1 e,emp1 b
+where e.mgr=b.ename;

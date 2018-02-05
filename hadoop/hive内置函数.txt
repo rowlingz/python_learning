@@ -72,7 +72,9 @@ select sname, age, case age when 20 then age*10 when 18 then age from stu;
 
 
 7、聚合函数
-count       count(*)    返回列数， count（指定一列）    当前列的行数
+count
+    count(*)    返回行数，
+    count（指定一列）    当前列的行数
 sum/min/max/avg(指定一列)    返回当前列的sum/min/max/avg
 
 

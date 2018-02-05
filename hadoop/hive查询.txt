@@ -40,3 +40,6 @@ select sname, age from table_name order by age desc;
 
 
 =============================================
+子查询
+hive只支持from where子句中的子查询  in / not in
+ select * from emp1 e where e.empno not in (select e1.mgr from emp1 e1 where e1.mgr is not null);
