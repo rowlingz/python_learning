@@ -1,0 +1,1 @@
+{'': 22, '四川': 26, '江苏': 53, '安徽': 3, 'Paris': 2, '山西': 1, '广东': 9, '辽宁': 2, 'Idaho': 1, '福建': 2, 'Sha Tin': 1, '浙江': 4, '湖南': 1, '云南': 1, '北京': 4, '上海': 7, 'Barcelona': 1, '海南': 1, '重庆': 3, '天津': 2, 'Vienna': 1, 'Burgenland': 1, '陕西': 1, '江西': 1, '黑龙江': 1, 'New Taipei City': 1, 'Vancouver': 1, 'Dubayy': 1, 'Sai Kung': 1, 'St. Peterburg': 1, 'Kaohsiung City': 1}
