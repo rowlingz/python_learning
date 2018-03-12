@@ -1,6 +1,7 @@
+# -*- utf-8 -*-
 import pymysql
 
-conn = pymysql.connect(host="localhost", user="root", password="root", database="test", port=3306)
+conn = pymysql.connect(host="localhost", user="root", password="root", database="test", port=3306, charset="utf8")
 cur = conn.cursor()
 
 sql = "select a.s_id from (select s_id, s_score from score where c_id = '1' )a, " \
@@ -25,7 +26,31 @@ sql8 = "UPDATE score SET c_id = 1 WHERE s_id = 3 AND s_score = 60"
 
 sql9 = "SELECT TOP 2 * FROM score WHERE s_id = 1"
 
-cur.execute(sql9)
+sql10 = "SELECT s_score FROM score ORDER BY s_score DESC "
+
+sql11 = "SELECT * FROM movie LIMIT 10"
+
+sql12 = "SELECT realIP FROM all_gzdata WHERE userOS IN ('Android', 'Windows 7') LIMIT 10 "
+
+sql13 = "SELECT * FROM teacher WHERE t_id NOT BETWEEN 1 and 3"
+
+sql14 = "SELECT t_id as number, t_name as name FROM teacher"
+
+sql15 = "SELECT student.s_name, score.c_id, score.s_score FROM student LEFT JOIN score ON student.s_id =score.s_id"
+
+sql16 = "SELECT student.s_name, score.s_score FROM student LEFT JOIN score ON student.s_id = score.s_id"
+
+sql17 = "SELECT t_id, t_name FROM teacher UNION SELECT t_id, t_name FROM teacher1"
+
+sql18 = "SELECT s_id, AVG(s_score) FROM score GROUP BY s_id"
+
+sql19 = "SELECT s_id, SUM(s_score) FROM score GROUP BY s_id HAVING SUM(s_score) > 100 "
+
+sql20 = "SELECT t_id, UCASE(t_name) AS name FROM teacher1"
+
+sql21 = "SELECT MID(t_name, 1, 2) FROM teacher1"
+
+cur.execute(sql20)
 conn.commit()
 
 print(cur.fetchall())
