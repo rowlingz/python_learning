@@ -2,11 +2,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import LSTM
+# from sklearn.preprocessing import MinMaxScaler
+# from sklearn.metrics import mean_squared_error
+# from keras.models import Sequential
+# from keras.layers import Dense
+# from keras.layers import LSTM
 import math
 
 
@@ -28,14 +28,7 @@ def creat_dataset(dataset, look_back=1):
     return np.array(x), np.array(y)
 
 
-if __name__ == '__main__':
-    # plt.plot(dataset)
-    # plt.show()
-    x, y = creat_dataset(dataset)
-    print(x.shape)
-    print('+++++++++++')
-    print(y.shape)
-
+def LSTM_model(dataset):
     scaler = MinMaxScaler(feature_range=(0, 1))
     dataset = scaler.fit_transform(dataset)
 
@@ -81,3 +74,30 @@ if __name__ == '__main__':
     plt.plot(train_predict_plot)
     plt.plot(test_predict_plot)
     plt.show()
+
+
+def get_data(filename):
+    # 将读取的数据作为时间序列
+    date_parse = lambda dates: pd.datetime.strptime(dates, "%b-%y")         # 指定将输入的字符串转换为可变的时间数据
+    data = pd.read_csv(filename, index_col='Month', date_parser=date_parse)
+    return data
+
+
+if __name__ == '__main__':
+    # plt.plot(dataset)
+    # plt.show()
+    # x, y = creat_dataset(dataset)
+    # print(x.shape)
+    # print('+++++++++++')
+    # print(y.shape)
+
+    # data = pd.read_csv(file_name)
+    # print(data.head())
+
+    data = get_data(file_name)
+
+    print(data.head())
+    print(data.index)
+
+    ts = data['number']
+    print(ts[:'2052'])
