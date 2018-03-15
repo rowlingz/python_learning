@@ -64,10 +64,46 @@ frame_to_series1 = frame.ix[1]      # 等价于frame_to_series1 = frame.ix['two'
 # 2、数组   长度要匹配
 # 3、series 匹配索引后赋值
 # 4、为不存在的列赋值，会创建新列
+
+frame['debt'] = 5
+frame['debt'] = np.arange(4)
+
+val = pd.Series([1.2, 3, 6.7], index=['one', 'two', 'four'])
+frame['debt'] = val
+
 # 5、del df[列名]，删除列
+del frame['debt']
 
 
+# reindex 重新索引
+obj = pd.Series([1, 2, 3], index=['a', 'b', 'c'])
+obj2 = obj.reindex(['a', 'nn', 'c', 'ff'], fill_value=0)
+obj3 = obj.reindex(['a', 'nn', 'c', 'ff'], method='pad')
+
+data_frame = pd.DataFrame(np.arange(9).reshape((3, 3)), index=['a', 'b', 'c'], columns=['mary', 'kity', 'sum'])
+frame1 = data_frame.reindex(['a', 'e', 'c', 'b'], fill_value=14)
+
+frame2 = data_frame.reindex(columns=['kity', 'jack'])
+
+frame3 = data_frame.reindex(index=['a', 'e', 'c', 'b'], columns=['kity', 'jack'])
+
+
+# 删除指定轴上的项 drop 得到新列
+# 删除行
+obj_drop = obj.drop('b')
+frame_drop = data_frame.drop('a')
+
+# 删除指定列
+frame_drop1 = data_frame.drop('sum', axis=1)
 
 if __name__ == "__main__":
-    print(frame)
-    print(frame_to_series1)
+    # print(frame)
+    # # print(frame_to_series1)
+    # print(frame.values)
+    # print('four' in frame.index)
+    print(obj)
+    print("+++++++++++++++++")
+    print(obj_drop)
+
+    print(data_frame)
+    print(frame_drop)
