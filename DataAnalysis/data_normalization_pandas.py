@@ -106,6 +106,79 @@ data_repet_bool = data.duplicated()
 data_repet_drop = data.drop_duplicates(['k1'])
 
 
+# 数据转换
+foods = pd.DataFrame({'food': ['bacon', 'pulled pork', 'bacon', 'Pastrami', 'corned beef',
+                              'Bacon', 'pastrami', 'honey ham', 'nova lox'],
+                     'ounces': [4, 3, 12, 6, 7.5, 8, 3, 5, 6]})
+
+meet_to_animal = {
+    'bacon': 'pig',
+    'pulled pork': 'pig',
+    'pastrami': 'cow',
+    'corned beef': 'cow',
+    'honey ham': 'pig',
+    'nova lox': 'salmon'
+}
+
+# 利用映射进行数据转换， map修改对象本身
+foods['animal'] = foods['food'].map(lambda x: meet_to_animal[x.lower()])
+
+
+# replace 替换(值， 列表， 字典)，，产生新的对象
+f1 = foods.iloc[:, 1].replace(5, np.nan)
+f2 = foods.iloc[:, 1].replace([5, 6, 8], np.nan)
+f3 = foods.iloc[:, 1].replace({5: np.nan, 12: 0})
+
+# rename 轴索引替换
+new_foods = foods.rename(columns=str.upper)
+new_foods1 = foods.rename(index={1: 'one', 3: 'three'},
+                          columns=str.upper)
+
+
+# 数据离散化， 划分分组  cut,传入参数（bin边界， bin数量）
+ages = [20, 22, 25, 27, 21, 23, 37, 31, 61, 45, 41, 32]
+bins = [18, 25, 36, 60, 100]
+group_name = ['youth', 'youthAdult', 'middle_Age', 'Senior']
+cats = pd.cut(ages, bins, labels=group_name)
+
+# qcut 按样本分位点划分
+cats1 = pd.qcut(ages, 4)
+# 统计各组数目
+values = pd.value_counts(cats1)
+
+
+# 异常值过滤   布尔型Dataframe 及any方法
+data = pd.DataFrame(np.random.randn(1000, 4))
+
+# 找出第3列绝对值大于3的行标索引
+col = data[3]
+col1 = col[np.abs(col) > 3]
+
+# 找出任意列绝对值超过3的值的所有行标
+data1 = data[(np.abs(data) > 3).any(1)]
+
+# 排列和随机采样
+df = pd.DataFrame(np.arange(5 * 4).reshape(5, 4))
+sampler = np.random.permutation(4)
+
+
+# take 选取指定行/列
+df1 = df.take(sampler, axis=1)
+
+
+# 计算指标/哑变量 get_dummies   将某一列派生成k列矩阵
+df = pd.DataFrame({'key': ['b', 'b', 'a', 'c', 'a', 'b'],
+                   'data1': range(6)})
+
+df_dummy = pd.get_dummies(df['key'])
+
+
+df_with_dummy = df[['data1']].join(pd.get_dummies(df['key'], prefix='key'))
+
+
+df2 = df.take(np.random.permutation(len(df))[: 3])
+
+df3 = pd.get_dummies(cats)
 
 if __name__ == '__main__':
     # print(df1)
@@ -113,7 +186,9 @@ if __name__ == '__main__':
     # print(df2)
     # print("++++++++++++++")
     # print(df_merge_index)
-    print(data)
+    print(df)
     print("++++++++++++++")
-    print(data_repet_bool)
-    print(data_repet_drop)
+    print(df_dummy)
+    # print(df1)
+    print("++++++++++++++")
+    print(df3)
