@@ -180,6 +180,12 @@ df2 = df.take(np.random.permutation(len(df))[: 3])
 
 df3 = pd.get_dummies(cats)
 
+
+# 字符串操作
+# split, strip, index, find, replace, count
+# 正则表达式 regex
+
+
 if __name__ == '__main__':
     # print(df1)
     # print("++++++++++++++")
