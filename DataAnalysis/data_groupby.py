@@ -120,10 +120,44 @@ grouped = frame['data2'].groupby(cat)
 grouped1 = grouped.apply(get_stats).unstack()
 
 
+# 填充缺失值 fillna
+# df_pct = tips['tip_pct']
+# df_pct[df_pct < 0.1] = np.nan
+#
+# f = lambda x: x.fillna(x.mean())
+# df_fillna = tips.groupby('smoker').apply(f)
+
+
+# 随机取样和排列----抽取扑克牌np.random.permutation(n),  take
+# 红桃（Hearts）,黑桃（Spades）,梅花（Clubs）， 方片（Diamonds）
+suits = ['H', 'S', 'C', 'D']
+card_val = (list(range(1, 11)) + [10] * 3) * 4
+base_names = ['A'] + list(range(2, 11)) + ['J', 'K', 'Q']
+cards = []
+
+for suit in suits:
+    cards.extend(str(num) + suit for num in base_names)
+
+deck = pd.Series(card_val, index=cards)
+
+
+def draw(deck, n=5):
+    # 随机排列后，抽取前n列
+    return deck.take(np.random.permutation(len(deck)))[:n]
+
+
+get_suit = lambda card: card[-1]
+
+deck_get = deck.groupby(get_suit, group_keys=False).apply(draw, n=2)
+
+
 if __name__ == '__main__':
     # print(df)
     # print(k1_means)
     # print(new_df)
-    print(frame.head())
-    print(grouped1)
-    # print(result.unstack('smoker'))
+    # print(frame.head())
+    # print(grouped1)
+
+    # print(tips[tips['tip_pct'].isnull()])
+    print(draw(deck))
+    print(deck_get)
