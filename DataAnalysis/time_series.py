@@ -6,6 +6,7 @@ from datetime import timedelta
 # 导入datetime 模块中的datetime对象
 
 import pandas as pd
+import numpy as np
 
 
 def datetime_model():
@@ -41,7 +42,7 @@ def convert_str_datetime():
     from dateutil.parser import parse
     stamp3 = parse('6/1/2009')
 
-    # 借助pandas 处理成组日期
+    # 借助pandas 处理成组的日期, 得到DatetimeIndex
     date_str = ['7/6/2001', '8/9/2010']
     date_time = pd.to_datetime(date_str)
 
@@ -50,6 +51,16 @@ def convert_str_datetime():
     return stamp
 
 
+def cut_timeseries():
+    dates = [datetime(2011, 1, 2), datetime(2011, 1, 5), datetime(2011, 1, 7),
+             datetime(2011, 1, 8), datetime(2011, 1, 10), datetime(2011, 1, 12)]
+
+    ts = pd.Series(np.random.randn(6), index=dates)
+    print(ts)
+    print(ts['1/10/2011'])
+    print(type(ts.index[0]))
+
+
 if __name__ == '__main__':
     # convert_str_datetime()
-    datetime_model()
+    cut_timeseries()
