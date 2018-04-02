@@ -59,8 +59,33 @@ def cut_timeseries():
     print(ts)
     print(ts['1/10/2011'])
     print(type(ts.index[0]))
+    # Series序列日期切片
+    print(ts[datetime(2011, 1, 8):])
+
+    long_ts = pd.DataFrame(np.random.randn(4, 4),
+                           index=pd.date_range('1/1/2000', periods=4),
+                           columns=['a', 'b', 'c', 'd'])
+    # print(long_ts)
+    # print("+++++")
+    # print(long_ts['2001-02'])
+    print(long_ts.ix['2000-01-01'])
+
+
+def rept_time():
+    """重复时间处理  groupby(level=0)"""
+    dates = pd.DatetimeIndex(['1/1/2000', '1/2/2000', '1/2/2000', '1/2/2000', '1/3/2000'])
+    ts = pd.Series(np.random.randn(5), index=dates)
+    print(ts)
+    # print(ts['1/2/2000'])
+    # print(ts['1/3/2000'])
+    print(ts.index.is_unique)
+
+    # 时间戳聚合，level=0，在索引层分组
+    grouped = ts.groupby(level=0)
+    print(grouped.mean())
+    print(grouped.count())
 
 
 if __name__ == '__main__':
     # convert_str_datetime()
-    cut_timeseries()
+    rept_time()
