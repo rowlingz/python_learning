@@ -1,6 +1,10 @@
 # -*- coding:utf-8 -*-
 import numpy as np
 import tensorflow as tf
+import math
+import timeit
+import matplotlib.pyplot as plt
+import pandas as pd
 
 
 def generate_data(dimension, num):
@@ -85,7 +89,7 @@ def gradient_descent(x, y, model, learning_rate=0.01, max_iter=10000, tol=1.e-6)
     summary = tf.summary.merge_all()
 
     # 写入文件
-    summary_writer = creat_summary_writer("./logs")
+    summary_writer = creat_summary_writer("./logs/gradient_descent_log")
 
     # 产生初始化参数
     init = tf.global_variables_initializer()
@@ -102,7 +106,7 @@ def gradient_descent(x, y, model, learning_rate=0.01, max_iter=10000, tol=1.e-6)
     diff = np.inf           # 初始损失函数的变动
 
     # 当损失函数的变动小于阈值 或 达到最大循环次数， 停止迭代
-    while (step < max_iter) or (diff > tol):
+    while (step < max_iter) & (diff > tol):
         _, summary_str, loss = sess.run(
             [optimizer, summary, model['loss_function']],
             feed_dict={model['independent_variable']: x,
@@ -116,15 +120,105 @@ def gradient_descent(x, y, model, learning_rate=0.01, max_iter=10000, tol=1.e-6)
         prev_loss = loss
         step += 1
     summary_writer.close()
-    print("模型参数： %s" % sess.run(model['model_params']))
-    print("迭代次数： %s" % step)
-    print("损失函数值： %s" % loss)
+    # print("模型参数： %s" % sess.run(model['model_params']))
+    # print("迭代次数： %s" % step)
+    # print("损失函数值： %s" % loss)
+
+
+def stochastic_gradient_descent(x, y, model, learning_rate=0.01,
+                                mini_batch_fraction=0.01, epoch=10000, tol=1.e-6):
+
+    method = tf.train.GradientDescentOptimizer(learning_rate=learning_rate)
+    optimizer = method.minimize(model['loss_function'])
+
+    tf.summary.scalar("loss_function", model["loss_function"])
+    tf.summary.histogram("params", model["model_params"])
+    tf.summary.scalar("first_param", tf.reduce_mean(model["model_params"][0]))
+    tf.summary.scalar("last_param", tf.reduce_mean(model["model_params"][-1]))
+
+    # 合并summary类为一个操作
+    summary = tf.summary.merge_all()
+
+    # 写入文件
+    summary_writer = creat_summary_writer("./logs/stochastic_gradient_descent_log")
+
+    # 产生初始化参数
+    init = tf.global_variables_initializer()
+
+    # 创建session对象，执行tensorflow
+    sess = tf.Session()
+
+    # 初始化变量
+    sess.run(init)
+
+    step = 0
+    batch_size = int(x.shape[0] * mini_batch_fraction)
+    batch_num = int(math.ceil(1 / mini_batch_fraction))
+    prev_loss = np.inf
+    diff = np.inf
+
+    while (step < epoch) & (diff > tol):
+        for i in range(batch_num):
+            batch_x = x[i * batch_size: (i + 1) * batch_size]
+            batch_y = y[i * batch_size: (i + 1) * batch_size]
+
+            sess.run([optimizer], feed_dict={model['independent_variable']: batch_x,
+                                             model['dependent_variable']: batch_y})
+
+            summary_str, loss = sess.run([summary, model['loss_function']],
+                                         feed_dict={model['independent_variable']: x,
+                                                    model['dependent_variable']: y})
+
+            summary_writer.add_summary(summary_str, step * batch_num + i)
+
+            diff = abs(prev_loss - loss)
+            prev_loss = loss
+            if diff <= tol:
+                break
+        step += 1
+    summary_writer.close()
+    # print("模型参数： %s" % sess.run(model['model_params']))
+    # print("迭代次数： %s" % step)
+    # print("损失函数值： %s" % loss)
+
+
+def compare_with_diff_size():
+    """比较两种模型在不同数据量下的 时间"""
+    re = []
+    dimension = 20
+    model = create_linear_model(dimension)
+    for i in range(1, 11):
+        num = 10000 * i
+        x, y = generate_data(dimension, num)
+
+        start_time = timeit.default_timer()
+        gradient_descent(x, y, model)
+        end_time = timeit.default_timer()
+
+        gd_time = end_time - start_time
+
+        start_time = timeit.default_timer()
+        stochastic_gradient_descent(x, y, model)
+        end_time = timeit.default_timer()
+
+        sgd_time = end_time - start_time
+
+        re.append([num, gd_time, sgd_time])
+
+    # 运行时间可视化
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    plt.rcParams['axes.unicode_minus'] = False
+    data = pd.DataFrame(re, columns=['num', 'gd_time', 'sgd_time'])
+    data = data.set_index('num')
+    data.plot()
+    plt.show()
+    return re
 
 
 def run():
     """程序入口"""
     # dimension 自变量个数； num 样本数
-    dimension, num = 30, 1000
+    dimension, num = 30, 10000
 
     # 随机产生模型数据
     x, y = generate_data(dimension, num)
@@ -134,7 +228,11 @@ def run():
 
     # 采用梯度下降法， 估计模型参数
     gradient_descent(x, y, model)
+    # 随机梯度下降
+    stochastic_gradient_descent(x, y, model)
 
 
 if __name__ == "__main__":
     run()
+    re = compare_with_diff_size()
+
