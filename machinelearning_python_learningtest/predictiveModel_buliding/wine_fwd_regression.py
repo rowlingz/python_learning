@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 import pandas as pd
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, Ridge
 import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt
@@ -92,9 +92,40 @@ def get_best_attributes(train_data, test_data):
     plt.show()
 
 
+def ridge_regression(train_data, test_data):
+    rms_error = []
+    alpha_list = [0.1 ** i for i in [0, 1, 2, 3, 4, 5, 6]]
+    train_x, train_y = train_data.ix[:, :-2], train_data.ix[:, -1]
+    test_x, test_y = test_data.ix[:, :-2], test_data.ix[:, -1]
+
+    for alph in alpha_list:
+        wine_model_ridge = Ridge(alpha=alph)
+        wine_model_ridge.fit(train_x, train_y)
+        error = np.linalg.norm((test_y - wine_model_ridge.predict(test_x)), 2) / sqrt(len(test_y))
+
+        rms_error.append(error)
+
+    plt.plot(range(len(rms_error)), rms_error, 'o-')
+    plt.xlabel('-log(alpha)')
+    plt.ylabel('Error RMS')
+    plt.show()
+
+    i_best = np.argmin(rms_error)
+    alph = alpha_list[i_best]
+
+    wine_model_ridge = Ridge(alpha=alph)
+    wine_model_ridge.fit(train_x, train_y)
+
+    plt.scatter(wine_model_ridge.predict(test_x), test_y, s=100, alpha=0.10)
+    plt.xlabel('Predicted Taste Score')
+    plt.ylabel('Actual Taste Score')
+    plt.show()
+
+
 if __name__ == "__main__":
     train_data, test_data = split_data(data)
 
     get_best_attributes(train_data, test_data)
+    ridge_regression(train_data, test_data)
 
     print('end')
