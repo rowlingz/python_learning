@@ -126,3 +126,50 @@ print("Best alpha for Mis_classification Error = ", plot_alphas[idx_min])
 
 print('Best Vlaue for AUC = ', auc[idx_max])
 print('Best alpha for AUC = ', plot_alphas[idx_max])
+
+
+def coefficient_order(x_scaled, y_scaled):
+    # 在整个数据集上训练，获取alphas, coefs
+    alphas, coefs, _ = enet_path(x_scaled, y_scaled, l1_ratio=0.8, fit_intercept=False, return_models=False)
+    plt.plot(alphas, coefs.T)
+    plt.xlabel('alpha')
+    plt.ylabel('coefficients')
+    plt.axis('tight')
+    plt.semilogx()
+    ax = plt.gca()
+    ax.invert_xaxis()
+    plt.show()
+
+    # find coefficient ordering 找到每一列中不为0的行
+    n_attr, n_alpha = coefs.shape
+    nz_list = []
+    for i_alpha in range(1, n_alpha):
+        coef_list = list(coefs[:, i_alpha])
+        nz_coef = [i for i in range(n_attr) if coef_list[i] != 0]
+        for q in nz_coef:
+            if q not in nz_list:
+                nz_list.append(q)
+
+    names = ['V' + str(i) for i in range(n_rows)]
+    name_list = [names[nz_list[i]] for i in range(len(nz_list))]
+    print('Attributes Ordered by How Early They Enter the Model')
+    print(name_list)
+
+    # find coefficients corresponding to best alpha value（来源于交叉验证）
+    alphaStar = 0.020334883589342503
+    index_alphaStar = [index for index in range(100) if alphas[index] > alphaStar]
+    index_star = max(index_alphaStar)
+
+    coef_star = list(coefs[:, index_star])
+    print('Best coefficient values', coef_star)
+
+    print("")
+
+    # The coefficients on normalized attributes give another slightly different ordering
+    abs_coef = [abs(a) for a in coef_star]
+    coef_sort = sorted(abs_coef, reverse=True)
+    idx_coef_size = [abs_coef.index(a) for a in coef_sort if a != 0]
+    name_list_2 = [names[idx_coef_size[i]] for i in range(len(idx_coef_size))]
+
+    print("Attributes Ordered by Coef Size at Optimum alpha")
+    print(name_list_2)
