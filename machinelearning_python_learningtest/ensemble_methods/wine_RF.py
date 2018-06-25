@@ -5,7 +5,8 @@ from sklearn.model_selection import train_test_split
 from sklearn import ensemble
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
-
+import random
+from sklearn.tree import DecisionTreeRegressor
 
 target_url = "http://archive.ics.uci.edu/ml/machine-" \
              "learning-databases/wine-quality/winequality-red.csv"
@@ -65,6 +66,8 @@ def gradient_boosting_regressor(x_train, x_test, y_train, y_test):
     wine_gb_model.fit(x_train, y_train)
 
     mse_error = []
+
+    # 训练一个含有n_estimators个决策树的模型， 生成所有不同规模下（1到n_estimators个不同决策树数目）的预测值
     predict = wine_gb_model.staged_predict(x_test)
     for p in predict:
         mse_error.append(mean_squared_error(y_test, p))
@@ -81,6 +84,7 @@ def gradient_boosting_regressor(x_train, x_test, y_train, y_test):
     plt.subplots_adjust(left=0.25, right=0.9, top=0.9, bottom=0.1)
     plt.show()
 
+    # 属性的重要性
     feature_importance = wine_gb_model.feature_importances_
     feature_importance = feature_importance / feature_importance.max()
     sort_idx = np.argsort(feature_importance)
@@ -89,3 +93,48 @@ def gradient_boosting_regressor(x_train, x_test, y_train, y_test):
     plt.yticks(bar_pos, wine_names[sort_idx])
     plt.xlabel('Variable Importanc')
     plt.show()
+
+
+def bagging(x_train, x_test, y_train, y_test):
+    num_tree_max = 100
+    tree_depth = 5
+    bag_fract = 0.5
+    n_bag_samples = int(len(x_train) * bag_fract)
+
+    model_list, pred_list = [], []
+
+    for i_tree in range(num_tree_max):
+        # 随机取样
+        idx_bag = []
+        for i in range(n_bag_samples):
+            idx_bag.append(random.choice(range(len(x_train))))
+
+        x_train_bag = [x_train[i] for i in idx_bag]
+        y_train_bag = [y_train[i] for i in idx_bag]
+
+        model_list.append(DecisionTreeRegressor(max_depth=tree_depth))
+        model_list[-1].fit(x_train_bag, y_train_bag)
+
+        latest_pred = model_list[-1].predict(x_test)
+        pred_list.append(list(latest_pred))
+
+    mse = []
+    all_predict = []
+    for i_model in range(len(model_list)):
+        prediction = []
+        for i_pred in range(len(x_test)):
+            prediction.append(sum([pred_list[i][i_pred] for i in range(i_model + 1)]) / (i_model + 1))
+
+        all_predict.append(prediction)
+        errors = [(y_test[i] - prediction[i]) for i in range(len(y_test))]
+        mse.append(sum([e * e for e in errors]) / len(y_test))
+
+    n_models = [i + 1 for i in range(len(model_list))]
+
+    plt.plot(n_models, mse)
+    plt.axis('tight')
+    plt.xlabel('Number of Models in Ensemble')
+    plt.ylabel('Mean Squared Error')
+    plt.ylim((0.0, max(mse)))
+
+    print('Minium MSE', min(mse))
