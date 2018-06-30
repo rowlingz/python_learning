@@ -2,10 +2,12 @@
 
 import pandas as pd
 from sklearn.cluster import KMeans
+import matplotlib.pyplot as plt
+import numpy as np
 
 
-filename = './data/air_data.csv'
-air_data = pd.read_csv(filename, encoding='utf-8')
+# filename = './data_7/air_data.csv'
+# air_data = pd.read_csv(filename, encoding='utf-8')
 
 
 def get_data(air_data):
@@ -21,7 +23,7 @@ def get_data(air_data):
     # result.columns = ['null', 'min', 'max']
 
     # 将得到的探索结果result写入文件
-    result.to_csv('./data/explore.csv', sep=',', header=True)
+    result.to_csv('./data_7/explore.csv', sep=',', header=True)
 
     print(result)
 
@@ -76,8 +78,32 @@ def mode_k_means(file, k=5):
     data.to_csv('./data/result.csv', sep=',')
 
 
+def result_pic(result):
+    """雷达图的绘制"""
+    result = pd.concat([result, result[['L']]], axis=1)
+    kinds = list(result.iloc[:, 0])
+    centers = np.array(result.iloc[:, 2:])
+    labels = ['L', 'R', 'F', 'M', 'C']
+
+    angle = np.linspace(0, 2 * np.pi, len(labels), endpoint=False)
+    angle = np.concatenate((angle, [angle[0]]))
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, polar=True)
+
+    for i in range(len(kinds)):
+        ax.plot(angle, centers[i], linewidth=2, label=kinds[i])
+
+    ax.set_thetagrids(angle * 180 / np.pi, labels)
+    plt.title('different kind')
+    plt.legend()
+    plt.show()
+
+
 if __name__ == '__main__':
     # regulation('./data/zscoredata.xls')
     # regulation('./data/clean_file.csv')
-    mode_k_means('./data/regulation_file.csv')
-    print('end')
+    # mode_k_means('./data/regulation_file.csv')
+    # print('end')
+    result = pd.read_csv('./data_7/cluster_center.csv', sep=',')
+    result_pic(result)
