@@ -57,6 +57,48 @@ def regulation(clean_file):
     data.to_csv('./data/regulation_file.csv', sep=',')
 
 
+def dist_euc(vec_a, vec_b):
+    """
+    两个向量间的欧式距离
+    :param vec_a:
+    :param vec_b:
+    :return:
+    """
+    dist = np.linalg.norm(vec_a - vec_b)
+    return dist
+
+
+def select_k_value(file):
+    """
+    尝试不同的K值，用欧式距离评价
+    :param file:
+    :return:
+    """
+    data = pd.read_csv(file, sep=',', encoding='utf-8')
+    data = np.array(data).astype('float32')
+    nums = range(2, 10)
+    sse_list = []
+    for num in nums:
+        sse = 0
+        kmodel = KMeans(n_clusters=num, n_jobs=4)
+        kmodel.fit(data)
+
+        cluster_center_list = kmodel.cluster_centers_
+        cluster_list = kmodel.labels_.tolist()
+        for i in range(len(data)):
+            cluster_num = cluster_list[i]
+            sse += dist_euc(data[i, :], cluster_center_list[cluster_num])
+        print('簇是：', num, '时，SSE是：', sse)
+        sse_list.append(sse)
+
+    plt.plot(nums, sse_list)
+    plt.xlabel('n_clusters')
+    plt.ylabel('SSE')
+    plt.show()
+
+    # return nums, sse_list
+
+
 def mode_k_means(file, k=5):
     """模型分析"""
     data = pd.read_csv(file, sep=',', encoding='utf-8')
@@ -106,4 +148,6 @@ if __name__ == '__main__':
     # mode_k_means('./data/regulation_file.csv')
     # print('end')
     result = pd.read_csv('./data_7/cluster_center.csv', sep=',')
-    result_pic(result)
+    # result_pic(result)
+    select_k_value('./data_7/regulation_file.csv')
+    print('end')
